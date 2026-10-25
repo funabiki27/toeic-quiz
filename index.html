@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOEIC Part 5 特訓クイズ (全13問)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --correct: #10b981;
+      --wrong: #ef4444;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 sm:p-6 flex items-center justify-center">
+  <div class="w-full max-w-2xl bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl shadow-2xl p-6 sm:p-8">
+    
+    <!-- ヘッダー / 進捗 -->
+    <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-4 mb-6">
+      <div>
+        <span class="text-xs uppercase tracking-wider text-[var(--accent)] font-bold">Part 5 弱点克服</span>
+        <h1 class="text-xl sm:text-2xl font-bold mt-1">瞬殺チェッククイズ</h1>
+      </div>
+      <div class="text-right">
+        <span id="progress-text" class="text-sm font-semibold text-[var(--text-muted)]">第 1 問 / 13 問</span>
+        <div class="w-28 sm:w-36 bg-slate-700 h-2 rounded-full mt-2 overflow-hidden">
+          <div id="progress-bar" class="bg-[var(--accent)] h-full transition-all duration-300" style="width: 7.7%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- クイズ本体 -->
+    <div id="quiz-container">
+      <!-- 問題文 -->
+      <div class="mb-6">
+        <span id="question-category" class="inline-block px-2.5 py-1 text-xs font-semibold rounded-md bg-blue-900/60 text-blue-300 border border-blue-700/50 mb-3">文法・構文</span>
+        <p id="question-text" class="text-lg sm:text-xl font-medium leading-relaxed"></p>
+      </div>
+
+      <!-- 選択肢ボタン -->
+      <div id="options-container" class="space-y-3 mb-6"></div>
+
+      <!-- 解説ボックス（初期状態は非表示） -->
+      <div id="explanation-container" class="hidden rounded-xl p-5 border transition-all duration-200 mb-6">
+        <div id="result-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3"></div>
+        <div id="explanation-content" class="text-sm sm:text-base leading-relaxed space-y-2"></div>
+      </div>
+
+      <!-- 次へボタン -->
+      <div class="flex justify-end">
+        <button id="next-btn" class="hidden px-6 py-2.5 rounded-xl font-bold bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white shadow-lg shadow-blue-500/20 transition-all flex items-center space-x-2">
+          <span>次の問題へ</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 結果画面（全問終了時） -->
+    <div id="result-screen" class="hidden text-center py-8">
+      <div class="text-5xl mb-4" id="result-emoji">🎯</div>
+      <h2 class="text-2xl sm:text-3xl font-bold mb-2">トレーニング完了！</h2>
+      <p class="text-[var(--text-muted)] mb-6">本日間違えた13問の急所ポイントを総復習しました。</p>
+      
+      <div class="bg-slate-900/60 border border-[var(--border-color)] rounded-xl p-6 max-w-sm mx-auto mb-8">
+        <div class="text-sm text-[var(--text-muted)] font-medium">スコア</div>
+        <div class="text-4xl font-extrabold text-[var(--accent)] mt-1" id="final-score">0 / 13</div>
+        <div class="text-xs text-slate-400 mt-2" id="score-comment"></div>
+      </div>
+
+      <button onclick="restartQuiz()" class="px-6 py-3 rounded-xl font-bold bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white shadow-lg transition-all">
+        もう一度挑戦する
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        category: "時・条件の副詞節 (問103対応)",
+        text: "After Ms. Lee ------- the quarterly financial report tomorrow, the board will review it.",
+        options: [
+          "(A) submit",
+          "(B) submits",
+          "(C) submitted",
+          "(D) will submit"
+        ],
+        answer: 1, // (B)
+        rule: "主節が未来（will review）でも、After（時を表す副詞節）の中では【未来のことも現在形】を使います。主語Ms. Lee（単数）なので三人称単数の submits が正解！",
+        tips: "【秒殺技】After / When / If の節の中に will は入れない！主語が単数なら -(e)s を選ぶ！"
+      },
+      {
+        id: 2,
+        category: "期日の前置詞 (問105対応)",
+        text: "Invoices for the design consultation are due ------- Friday at 5:00 P.M.",
+        options: [
+          "(A) before",
+          "(B) until",
+          "(C) lately",
+          "(D) almost"
+        ],
+        answer: 0, // (A)
+        rule: "is due は「締め切り・支払期日である」という意味。期日（点）を表すため、before（金曜日より前に）が正解。until は「状態の継続（〜までずっと）」を表すため、期日を表す due とは使えません。",
+        tips: "【秒殺技】due は『締め切りの点』。until（継続）ではなく before や by と結びつく！"
+      },
+      {
+        id: 3,
+        category: "接続詞＋分詞構文 (問106対応)",
+        text: "Employees must wear safety goggles ------- operating the heavy machinery.",
+        options: [
+          "(A) nor",
+          "(B) soon",
+          "(C) when",
+          "(D) further"
+        ],
+        answer: 2, // (C)
+        rule: "空所の後ろに operating（-ing）があります。when operating で「操作する際に」という意味になり、接続詞 when の後ろで主語とbe動詞（they are）が省略された分詞構文です。nor は neither A nor B など否定文で使います。",
+        tips: "【秒殺技】接続詞 + -ing（when -ing / while -ing / before -ing）の形はTOEIC頻出！"
+      },
+      {
+        id: 4,
+        category: "動詞修飾の副詞 (問109対応)",
+        text: "To more ------- assess customer satisfaction, the hotel introduced an online survey.",
+        options: [
+          "(A) accurate",
+          "(B) accuracy",
+          "(C) accurately",
+          "(D) accurateness"
+        ],
+        answer: 2, // (C)
+        rule: "To [more -------] assess と、後ろの動詞 assess（評価する）を修飾しています。動詞を修飾できるのは「副詞（-ly）」だけ！more があっても構造は変わらないので accurately が正解です。",
+        tips: "【秒殺技】To [副詞] 動詞の原形！動詞を修飾するなら名詞（accuracy）ではなく副詞（accurately）！"
+      },
+      {
+        id: 5,
+        category: "コロケーション (問112対応)",
+        text: "The technology store offers a wide ------- of accessories for smartphones and tablets.",
+        options: [
+          "(A) chance",
+          "(B) reason",
+          "(C) current",
+          "(D) range"
+        ],
+        answer: 3, // (D)
+        rule: "a range of ~（または a wide range of ~）で「幅広い〜、多種多様な〜」という最重要コロケーション（= a wide variety of）。",
+        tips: "【秒殺技】a wide range of + 複数名詞 はTOEICの定番型！"
+      },
+      {
+        id: 6,
+        category: "分詞形容詞 (問113対応)",
+        text: "We are seeking ------- accountants to handle our corporate tax audits.",
+        options: [
+          "(A) experienced",
+          "(B) experience",
+          "(C) experiencing",
+          "(D) experiential"
+        ],
+        answer: 0, // (A)
+        rule: "名詞 accountants（会計士）を前から修飾する形容詞。TOEICで「経験豊かな〜」を表す形容詞は 100% experienced です。",
+        tips: "【秒殺技】experienced staff / experienced engineers / experienced accountants！"
+      },
+      {
+        id: 7,
+        category: "本動詞の見抜き (問117対応)",
+        text: "The health inspector strongly ------- sanitizing the kitchen counters twice a day.",
+        options: [
+          "(A) recommend",
+          "(B) recommends",
+          "(C) recommending",
+          "(D) recommendation"
+        ],
+        answer: 1, // (B)
+        rule: "主語 The health inspector（単数・三人称）の後に副詞 strongly があり、文を成立させる述語動詞（V）が空所に入ります。主語が単数なので recommends が正解。-ing だと文に動詞がなくなってしまいます。",
+        tips: "【秒殺技】文全体を見て本動詞（V）があるか確認！ないなら三人称単数の -s 動詞！"
+      },
+      {
+        id: 8,
+        category: "最重要熟語 (問118対応)",
+        text: "Full-time staff members are ------- for health insurance benefits after 90 days.",
+        options: [
+          "(A) available",
+          "(B) comparable",
+          "(C) eligible",
+          "(D) permissible"
+        ],
+        answer: 2, // (C)
+        rule: "be eligible for + 名詞（〜の受給資格がある、〜の対象となる）。TOEICで給付金・昇進・割引・保険の資格といえば 100% eligible です！",
+        tips: "【秒殺技】be eligible for ~（資格がある）/ be eligible to do（〜する資格がある）は絶対暗記！"
+      },
+      {
+        id: 9,
+        category: "-ive名詞の罠 (問119対応)",
+        text: "The CEO announced a new renewable energy ------- aimed at cutting emissions by 30%.",
+        options: [
+          "(A) initiative",
+          "(B) initiate",
+          "(C) initial",
+          "(D) initiating"
+        ],
+        answer: 0, // (A)
+        rule: "a new renewable energy [名詞] の位置。initiative は語尾が -ive ですが「新たな取り組み、構想、戦略」という名詞です！",
+        tips: "【秒殺技】initiative（構想・取り組み）は名詞！representative（担当者）と並ぶ二大罠！"
+      },
+      {
+        id: 10,
+        category: "並列の接続表現 (問124対応)",
+        text: "The internship program provides hands-on experience ------- networking opportunities.",
+        options: [
+          "(A) though",
+          "(B) meanwhile",
+          "(C) as well as",
+          "(D) next to"
+        ],
+        answer: 2, // (C)
+        rule: "hands-on experience（実践経験）と networking opportunities（人脈作りの機会）という2つの名詞句を並列で結ぶ A as well as B（BだけでなくAも）が正解。meanwhile は副詞なので名詞同士を繋げません。",
+        tips: "【秒殺技】名詞 [ as well as ] 名詞！meanwhile は文頭や単独で使う副詞！"
+      },
+      {
+        id: 11,
+        category: "物流・生鮮語彙 (問126対応)",
+        text: "Express refrigerated trucks are used to transport ------- goods such as milk and seafood.",
+        options: [
+          "(A) perishable",
+          "(B) reluctant",
+          "(C) concerned",
+          "(D) sudden"
+        ],
+        answer: 0, // (A)
+        rule: "perishable は「腐りやすい、傷みやすい、生鮮の」という意味の形容詞。perishable goods / foods（生鮮品・要冷蔵品）は配送・ベーカリーの文脈で超頻出です。",
+        tips: "【秒殺技】refrigerated（冷蔵の）/ express（速達）ときたら perishable（生鮮の）！"
+      },
+      {
+        id: 12,
+        category: "手段の前置詞 (問128対応)",
+        text: "Job applicants must submit their resumes ------- the company's online career portal.",
+        options: [
+          "(A) onto",
+          "(B) via",
+          "(C) between",
+          "(D) per"
+        ],
+        answer: 1, // (B)
+        rule: "「〜を経由して、〜を使って（= through / by way of）」という手段・媒体を表す前置詞は via です。onto は「〜の上へ」という場所の移動を表します。",
+        tips: "【秒殺技】via email / via the website / via a laptop（〜を通じて）！"
+      },
+      {
+        id: 13,
+        category: "コロケーションと可算名詞 (問130対応)",
+        text: "The new marketing director has a fresh ------- toward digital advertising.",
+        options: [
+          "(A) power",
+          "(B) figure",
+          "(C) reduction",
+          "(D) perspective"
+        ],
+        answer: 3, // (D)
+        rule: "冠詞 a があるため、不可算名詞の power は不可。さらに「〜に対する新たな視点・見方」という意味で perspective toward ~ が完璧に合致します！",
+        tips: "【秒殺技】a new perspective toward ~（〜に対する新たな視点）！powerは数えられない！"
+      }
+    ];
+
+    let currentQuestionIdx = 0;
+    let score = 0;
+    let answered = false;
+
+    function renderQuestion() {
+      answered = false;
+      const q = questions[currentQuestionIdx];
+
+      document.getElementById("progress-text").textContent = `第 ${currentQuestionIdx + 1} 問 / ${questions.length} 問`;
+      document.getElementById("progress-bar").style.width = `${((currentQuestionIdx + 1) / questions.length) * 100}%`;
+
+      document.getElementById("question-category").textContent = q.category;
+      document.getElementById("question-text").textContent = q.text;
+
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "w-full text-left px-5 py-3.5 rounded-xl border border-[var(--border-color)] bg-slate-800/80 hover:bg-slate-700/80 transition-all font-medium flex items-center justify-between group";
+        btn.innerHTML = `
+          <span>${opt}</span>
+          <span class="w-6 h-6 rounded-full border border-slate-600 flex items-center justify-center text-xs group-hover:border-[var(--accent)]"></span>
+        `;
+        btn.onclick = () => selectOption(idx);
+        optionsContainer.appendChild(btn);
+      });
+
+      document.getElementById("explanation-container").className = "hidden";
+      document.getElementById("next-btn").classList.add("hidden");
+    }
+
+    function selectOption(selectedIdx) {
+      if (answered) return;
+      answered = true;
+
+      const q = questions[currentQuestionIdx];
+      const isCorrect = selectedIdx === q.answer;
+      if (isCorrect) score++;
+
+      const optionBtns = document.getElementById("options-container").children;
+
+      for (let i = 0; i < optionBtns.length; i++) {
+        optionBtns[i].onclick = null;
+        if (i === q.answer) {
+          optionBtns[i].className = "w-full text-left px-5 py-3.5 rounded-xl border border-emerald-500 bg-emerald-950/60 text-emerald-200 font-semibold flex items-center justify-between";
+          optionBtns[i].querySelector("span:last-child").innerHTML = "✓";
+          optionBtns[i].querySelector("span:last-child").className = "w-6 h-6 rounded-full bg-emerald-500 text-slate-900 flex items-center justify-center text-xs font-bold";
+        } else if (i === selectedIdx && !isCorrect) {
+          optionBtns[i].className = "w-full text-left px-5 py-3.5 rounded-xl border border-rose-500 bg-rose-950/60 text-rose-200 font-semibold flex items-center justify-between";
+          optionBtns[i].querySelector("span:last-child").innerHTML = "✕";
+          optionBtns[i].querySelector("span:last-child").className = "w-6 h-6 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs font-bold";
+        } else {
+          optionBtns[i].className = "w-full text-left px-5 py-3.5 rounded-xl border border-slate-700 bg-slate-800/40 text-slate-500 font-normal flex items-center justify-between";
+        }
+      }
+
+      const expContainer = document.getElementById("explanation-container");
+      const badge = document.getElementById("result-badge");
+      const content = document.getElementById("explanation-content");
+
+      if (isCorrect) {
+        expContainer.className = "rounded-xl p-5 border border-emerald-800/60 bg-emerald-950/30 mb-6";
+        badge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+        badge.textContent = "⭕️ 正解！";
+      } else {
+        expContainer.className = "rounded-xl p-5 border border-rose-800/60 bg-rose-950/30 mb-6";
+        badge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 bg-rose-500/20 text-rose-300 border border-rose-500/40";
+        badge.textContent = `❌ 不正解（正解: ${q.options[q.answer].split(" ")[0]}）`;
+      }
+
+      content.innerHTML = `
+        <p class="text-slate-200">${q.rule}</p>
+        <div class="mt-3 p-3 bg-slate-900/80 rounded-lg border border-slate-700/60 text-amber-300 text-xs sm:text-sm font-semibold">
+          💡 ${q.tips}
+        </div>
+      `;
+
+      const nextBtn = document.getElementById("next-btn");
+      nextBtn.classList.remove("hidden");
+      if (currentQuestionIdx === questions.length - 1) {
+        nextBtn.querySelector("span:first-child").textContent = "結果を見る";
+      }
+    }
+
+    document.getElementById("next-btn").onclick = () => {
+      currentQuestionIdx++;
+      if (currentQuestionIdx < questions.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    };
+
+    function showResults() {
+      document.getElementById("quiz-container").classList.add("hidden");
+      const resultScreen = document.getElementById("result-screen");
+      resultScreen.classList.remove("hidden");
+
+      document.getElementById("final-score").textContent = `${score} / ${questions.length}`;
+
+      const percentage = Math.round((score / questions.length) * 100);
+      let comment = "";
+      let emoji = "🎯";
+
+      if (percentage === 100) {
+        emoji = "🏆";
+        comment = "完璧です！今日間違えた13問の急所がすべて定着しました！本番でも秒殺できます。";
+      } else if (percentage >= 80) {
+        emoji = "✨";
+        comment = "素晴らしい！80%超え達成です。ミスした問題だけもう一度確認しておきましょう。";
+      } else {
+        emoji = "💪";
+        comment = "あと一歩！間違えた問題の「秒殺技」をもう一度チェックして、全問正解を目指しましょう。";
+      }
+
+      document.getElementById("result-emoji").textContent = emoji;
+      document.getElementById("score-comment").textContent = comment;
+    }
+
+    function restartQuiz() {
+      currentQuestionIdx = 0;
+      score = 0;
+      document.getElementById("result-screen").classList.add("hidden");
+      document.getElementById("quiz-container").classList.remove("hidden");
+      document.getElementById("next-btn").querySelector("span:first-child").textContent = "次の問題へ";
+      renderQuestion();
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
