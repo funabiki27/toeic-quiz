@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOEIC Part 5 特訓クイズ (全5問)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --correct: #10b981;
+      --wrong: #ef4444;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 sm:p-6 flex items-center justify-center">
+  <div class="w-full max-w-2xl bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl shadow-2xl p-6 sm:p-8">
+    
+    <!-- トップへ戻るリンク -->
+    <div class="mb-4">
+      <a href="../index.html" class="inline-flex items-center text-xs font-semibold text-[var(--accent)] hover:underline">
+        <span>← クイズ一覧に戻る</span>
+      </a>
+    </div>
+
+    <!-- ヘッダー / 進捗 -->
+    <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-4 mb-6">
+      <div>
+        <span class="text-xs uppercase tracking-wider text-[var(--accent)] font-bold">公式11 Test 1 Part 5 (問116〜130)</span>
+        <h1 class="text-xl sm:text-2xl font-bold mt-1">弱点5問 瞬殺特訓</h1>
+      </div>
+      <div class="text-right">
+        <span id="progress-text" class="text-sm font-semibold text-[var(--text-muted)]">第 1 問 / 5 問</span>
+        <div class="w-28 sm:w-36 bg-slate-700 h-2 rounded-full mt-2 overflow-hidden">
+          <div id="progress-bar" class="bg-[var(--accent)] h-full transition-all duration-300" style="width: 20%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- クイズ本体 -->
+    <div id="quiz-container">
+      <!-- 問題文 -->
+      <div class="mb-6">
+        <span id="question-category" class="inline-block px-2.5 py-1 text-xs font-semibold rounded-md bg-blue-900/60 text-blue-300 border border-blue-700/50 mb-3">カテゴリ</span>
+        <p id="question-text" class="text-lg sm:text-xl font-medium leading-relaxed"></p>
+      </div>
+
+      <!-- 選択肢ボタン -->
+      <div id="options-container" class="space-y-3 mb-6"></div>
+
+      <!-- 解説ボックス（初期状態は非表示） -->
+      <div id="explanation-container" class="hidden rounded-xl p-5 border transition-all duration-200 mb-6">
+        <div id="result-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3"></div>
+        <div id="explanation-content" class="text-sm sm:text-base leading-relaxed space-y-2"></div>
+      </div>
+
+      <!-- 次へボタン -->
+      <div class="flex justify-end">
+        <button id="next-btn" class="hidden px-6 py-2.5 rounded-xl font-bold bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white shadow-lg shadow-blue-500/20 transition-all flex items-center space-x-2">
+          <span>次の問題へ</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 結果画面（初期状態は非表示） -->
+    <div id="result-screen" class="hidden text-center py-8">
+      <div id="result-emoji" class="text-6xl mb-4">🏆</div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold mb-2">特訓完了！</h2>
+      <p id="result-summary" class="text-lg text-[var(--text-muted)] mb-6">スコア: <span id="final-score" class="font-bold text-white text-2xl">0 / 5</span></p>
+      <div id="score-comment" class="text-sm sm:text-base max-w-md mx-auto text-slate-300 mb-8 bg-slate-800/60 p-4 rounded-xl border border-slate-700"></div>
+      <div class="flex flex-col sm:flex-row justify-center gap-3">
+        <button onclick="restartQuiz()" class="px-6 py-3 rounded-xl font-bold bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white shadow-lg shadow-blue-500/20 transition-all">
+          もう一度挑戦する
+        </button>
+        <a href="../index.html" class="px-6 py-3 rounded-xl font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all">
+          クイズ一覧に戻る
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        category: "場所の副詞 (問118対応)",
+        text: "Mr. Rhee thinks that the missing file is ------- in the archives.",
+        options: [
+          "(A) locating",
+          "(B) somewhere",
+          "(C) removed",
+          "(D) especially"
+        ],
+        answer: 1,
+        rule: "文構造は `Mr. Rhee thinks that the missing file (S) is (V) [ ------- ] in the archives (M)` です。すでに文として完全であり、空所には「be動詞 + 場所の前置詞句」の間で場所の意味を補強する<strong>場所の副詞 somewhere（どこかに）</strong>が入ります。(C) removed は受動態ですが、remove は通常 remove A from B なので in との相性が合わず、ファイルがアーカイブの中で取り除かれているというのも意味が不自然です。",
+        tips: "【秒殺技】be動詞 ＋ 場所の前置詞句（in the archives）の間に入り、場所を補強するのは場所の副詞 somewhere 一択！"
+      },
+      {
+        id: 2,
+        category: "ビジネス語彙・コロケーション (問119対応)",
+        text: "Halle Theft Protection notifies customers immediately whenever there is a ------- of data security.",
+        options: [
+          "(A) breach",
+          "(B) contract",
+          "(C) secret",
+          "(D) reminder"
+        ],
+        answer: 0,
+        rule: "<strong>`breach of data security`（データセキュリティの侵害・漏洩）</strong>はTOEICおよびITビジネスで超頻出の定番コロケーションです。breach は「（法律・契約・規約などの）違反、侵害、破棄、突破口」を意味します。(B) contract（契約）では「セキュリティ契約があるたびに通知する」となり意味が通りません。",
+        tips: "【秒殺技】security breach や breach of security はビジネス英語の超定番セットフレーズ！見たら瞬時に選ぶ！"
+      },
+      {
+        id: 3,
+        category: "接続詞 vs 接続副詞 (問127対応)",
+        text: "------- Ms. Uribe was promoted to director of development at Cranhurst International, she served in many other capacities.",
+        options: [
+          "(A) Before",
+          "(B) Instead",
+          "(C) Likewise",
+          "(D) Consequently"
+        ],
+        answer: 0,
+        rule: "空所の後ろに `Ms. Uribe was promoted...`（節1：S+V）と、コンマを挟んで `she served...`（節2：S+V）という<strong>2つの節</strong>があります。<strong>2つの節を1文としてつなげるのは「接続詞」だけ</strong>です。(B) Instead（代わりに）、(C) Likewise（同様に）、(D) Consequently（結果として）はすべて「接続副詞」であり、節と節をつなぐ接続詞の働きはできません。接続詞になれるのは (A) Before だけです。",
+        tips: "【秒殺技】[ ------- ] S + V, S + V の形を見たら、接続副詞（Consequently, However, Therefore 等）は文法上即消去！接続詞（Before 等）を一発選択！"
+      },
+      {
+        id: 4,
+        category: "動詞の語彙・文脈判断 (問128対応)",
+        text: "Landscape designers usually present several renderings to clients to help them ------- the completed project.",
+        options: [
+          "(A) appear",
+          "(B) resemble",
+          "(C) visualize",
+          "(D) express"
+        ],
+        answer: 2,
+        rule: "文脈判断問題です。`rendering` は建築やデザイン業界の専門用語で「完成予想図、パース図」を意味します。デザイナーがクライアントに完成予想図を見せるのは、「完成したプロジェクトを具体的に頭に思い描く・視覚化する（visualize）」のを助けるためです。(B) resemble は「〜に似ている」という他動詞で、クライアントがプロジェクトに似るわけではないので不適です。",
+        tips: "【秒殺技】renderings（完成予想図）を提示する目的 ➡️ 頭の中にイメージ・視覚化する（visualize）という文脈のペアを見抜く！"
+      },
+      {
+        id: 5,
+        category: "品詞・語形変化 (問129対応)",
+        text: "------- silk will be imported from Japan for our evening-wear fashion designs next season.",
+        options: [
+          "(A) Luxuriate",
+          "(B) Luxuriously",
+          "(C) Luxuries",
+          "(D) Luxurious"
+        ],
+        answer: 3,
+        rule: "空所は文の主語である名詞 `silk`（絹）の直前にあります。名詞を前から修飾できる品詞は<strong>「形容詞」</strong>だけです。選択肢の中で形容詞は、形容詞の代表的語尾 `-ous` を持つ<strong>(D) Luxurious（高級な、豪華な）</strong>です。(A) Luxuriate は動詞、(B) Luxuriously は副詞、(C) Luxuries は名詞複数形です。",
+        tips: "【秒殺技】名詞 silk の直前 ➡️ 形容詞が入る！語尾 `-ous`（Luxurious）を見て3秒でマーク！"
+      }
+    ];
+
+    let currentQuestionIdx = 0;
+    let score = 0;
+    let answered = false;
+
+    function renderQuestion() {
+      answered = false;
+      const q = questions[currentQuestionIdx];
+
+      // 進捗更新
+      document.getElementById("progress-text").textContent = `第 ${currentQuestionIdx + 1} 問 / ${questions.length} 問`;
+      const progressPct = ((currentQuestionIdx + 1) / questions.length) * 100;
+      document.getElementById("progress-bar").style.width = `${progressPct}%`;
+
+      // カテゴリ・問題文
+      document.getElementById("question-category").textContent = q.category;
+      document.getElementById("question-text").textContent = q.text;
+
+      // 解説・ボタンのリセット
+      document.getElementById("explanation-container").classList.add("hidden");
+      document.getElementById("next-btn").classList.add("hidden");
+
+      // 選択肢レンダリング
+      const optContainer = document.getElementById("options-container");
+      optContainer.innerHTML = "";
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "w-full text-left p-4 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700/80 font-medium transition-all duration-150 flex items-center justify-between group";
+        btn.innerHTML = `<span>${opt}</span><span class="status-icon text-lg"></span>`;
+        btn.onclick = () => selectAnswer(idx);
+        optContainer.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(selectedIdx) {
+      if (answered) return;
+      answered = true;
+
+      const q = questions[currentQuestionIdx];
+      const isCorrect = selectedIdx === q.answer;
+      if (isCorrect) score++;
+
+      const optButtons = document.getElementById("options-container").children;
+
+      // 全ボタンの状態更新
+      for (let i = 0; i < optButtons.length; i++) {
+        optButtons[i].disabled = true;
+        optButtons[i].classList.remove("hover:bg-slate-700/80");
+
+        if (i === q.answer) {
+          // 正解の選択肢
+          optButtons[i].className = "w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-950/60 text-emerald-200 font-bold transition-all flex items-center justify-between";
+          optButtons[i].querySelector(".status-icon").textContent = "✓";
+        } else if (i === selectedIdx && !isCorrect) {
+          // 不正解で自分が選んだ選択肢
+          optButtons[i].className = "w-full text-left p-4 rounded-xl border-2 border-rose-500 bg-rose-950/60 text-rose-200 font-bold transition-all flex items-center justify-between";
+          optButtons[i].querySelector(".status-icon").textContent = "✕";
+        } else {
+          optButtons[i].classList.add("opacity-40");
+        }
+      }
+
+      // 解説パネルの表示
+      const expContainer = document.getElementById("explanation-container");
+      expContainer.classList.remove("hidden");
+      const badge = document.getElementById("result-badge");
+      const content = document.getElementById("explanation-content");
+
+      if (isCorrect) {
+        expContainer.className = "rounded-xl p-5 border border-emerald-800/60 bg-emerald-950/30 mb-6";
+        badge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+        badge.textContent = "⭕️ 正解！";
+      } else {
+        expContainer.className = "rounded-xl p-5 border border-rose-800/60 bg-rose-950/30 mb-6";
+        badge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 bg-rose-500/20 text-rose-300 border border-rose-500/40";
+        badge.textContent = `❌ 不正解（正解: ${q.options[q.answer].split(" ")[0]}）`;
+      }
+
+      content.innerHTML = `
+        <p class="text-slate-200">${q.rule}</p>
+        <div class="mt-3 p-3 bg-slate-900/80 rounded-lg border border-slate-700/60 text-amber-300 text-xs sm:text-sm font-semibold">
+          💡 ${q.tips}
+        </div>
+      `;
+
+      const nextBtn = document.getElementById("next-btn");
+      nextBtn.classList.remove("hidden");
+      if (currentQuestionIdx === questions.length - 1) {
+        nextBtn.querySelector("span:first-child").textContent = "結果を見る";
+      }
+    }
+
+    document.getElementById("next-btn").onclick = () => {
+      currentQuestionIdx++;
+      if (currentQuestionIdx < questions.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    };
+
+    function showResults() {
+      document.getElementById("quiz-container").classList.add("hidden");
+      const resultScreen = document.getElementById("result-screen");
+      resultScreen.classList.remove("hidden");
+
+      document.getElementById("final-score").textContent = `${score} / ${questions.length}`;
+
+      const percentage = Math.round((score / questions.length) * 100);
+      let comment = "";
+      let emoji = "🎯";
+
+      if (percentage === 100) {
+        emoji = "🏆";
+        comment = "完璧です！今日間違えた5問の急所がすべて定着しました！本番でも20秒秒殺できます。";
+      } else if (percentage >= 80) {
+        emoji = "✨";
+        comment = "素晴らしい！80%超え達成です。ミスした問題だけもう一度確認しておきましょう。";
+      } else {
+        emoji = "💪";
+        comment = "あと一歩！間違えた問題の「秒殺技」をもう一度チェックして、全問正解を目指しましょう。";
+      }
+
+      document.getElementById("result-emoji").textContent = emoji;
+      document.getElementById("score-comment").textContent = comment;
+    }
+
+    function restartQuiz() {
+      currentQuestionIdx = 0;
+      score = 0;
+      document.getElementById("result-screen").classList.add("hidden");
+      document.getElementById("quiz-container").classList.remove("hidden");
+      document.getElementById("next-btn").querySelector("span:first-child").textContent = "次の問題へ";
+      renderQuestion();
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
