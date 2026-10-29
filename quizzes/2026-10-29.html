@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOEIC 700点レベル 文法・語彙特訓 (全15問)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --correct: #10b981;
+      --wrong: #ef4444;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 sm:p-6 flex items-center justify-center">
+  <div class="w-full max-w-2xl bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl shadow-2xl p-6 sm:p-8">
+    
+    <!-- トップへ戻るリンク -->
+    <div class="mb-4">
+      <a href="../index.html" class="inline-flex items-center text-xs font-semibold text-[var(--accent)] hover:underline">
+        <span>← クイズ一覧に戻る</span>
+      </a>
+    </div>
+
+    <!-- ヘッダー / 進捗 -->
+    <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-4 mb-6">
+      <div>
+        <span class="text-xs uppercase tracking-wider text-[var(--accent)] font-bold">TOEIC 700点突破・厳選演習</span>
+        <h1 class="text-xl sm:text-2xl font-bold mt-1">文法・語彙 15問 瞬殺アタック</h1>
+      </div>
+      <div class="text-right">
+        <span id="progress-text" class="text-sm font-semibold text-[var(--text-muted)]">第 1 問 / 15 問</span>
+        <div class="w-28 sm:w-36 bg-slate-700 h-2 rounded-full mt-2 overflow-hidden">
+          <div id="progress-bar" class="bg-[var(--accent)] h-full transition-all duration-300" style="width: 6.66%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- クイズ本体 -->
+    <div id="quiz-container">
+      <!-- 問題文 -->
+      <div class="mb-6">
+        <span id="question-category" class="inline-block px-2.5 py-1 text-xs font-semibold rounded-md bg-blue-900/60 text-blue-300 border border-blue-700/50 mb-3">カテゴリ</span>
+        <p id="question-text" class="text-lg sm:text-xl font-medium leading-relaxed"></p>
+      </div>
+
+      <!-- 選択肢ボタン -->
+      <div id="options-container" class="space-y-3 mb-6"></div>
+
+      <!-- 解説パネル（回答後に表示） -->
+      <div id="explanation-container" class="hidden">
+        <div id="explanation-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3"></div>
+        <div id="explanation-content" class="text-sm sm:text-base leading-relaxed space-y-2"></div>
+      </div>
+
+      <!-- 次へボタン -->
+      <div class="mt-6 flex justify-end">
+        <button id="next-btn" class="hidden px-6 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold rounded-xl transition-colors shadow-lg shadow-blue-500/20 flex items-center space-x-2">
+          <span>次の問題へ</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 結果画面（全問終了時に表示） -->
+    <div id="result-screen" class="hidden text-center py-6">
+      <div id="result-emoji" class="text-5xl sm:text-6xl mb-4">🎯</div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold mb-2">特訓完了！</h2>
+      <p class="text-[var(--text-muted)] text-sm sm:text-base mb-6">お疲れ様でした！今回のスコアです。</p>
+
+      <div class="bg-slate-900/80 border border-slate-700/60 rounded-2xl p-6 max-w-sm mx-auto mb-6">
+        <div class="text-xs uppercase tracking-wider text-[var(--text-muted)] font-bold">正解数</div>
+        <div id="final-score" class="text-4xl sm:text-5xl font-black text-[var(--accent)] my-2">0 / 15</div>
+        <div id="score-comment" class="text-sm text-slate-300 font-medium"></div>
+      </div>
+
+      <div class="flex justify-center space-x-3">
+        <button onclick="restartQuiz()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-sm transition-colors border border-slate-600">
+          もう一度挑戦する
+        </button>
+        <a href="../index.html" class="px-5 py-2.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-semibold rounded-xl text-sm transition-colors shadow-lg shadow-blue-500/20">
+          クイズ一覧に戻る
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        category: "品詞（動詞を修飾する副詞）",
+        text: "Ms. Tanaka ------- reviewed the financial statements before submitting them to the audit committee.",
+        options: [
+          "(A) thorough",
+          "(B) thoroughly",
+          "(C) thoroughness",
+          "(D) more thorough"
+        ],
+        answer: 1,
+        rule: "文の述語動詞 reviewed（検討した・精査した）を修飾できる品詞は「副詞」だけです。形容詞 thorough（徹底的な）に -ly が付いた副詞 (B) thoroughly（徹底的に、入念に）が正解です。(C) は名詞、(D) は比較級形容詞。",
+        tips: "【秒殺技】動詞の前後は副詞の指定席！reviewed を見たら副詞 -ly を即マーク！"
+      },
+      {
+        id: 2,
+        category: "接続詞 vs 前置詞（逆接）",
+        text: "------- the inclement weather, the outdoor charity marathon proceeded as scheduled.",
+        options: [
+          "(A) Although",
+          "(B) Despite",
+          "(C) Because",
+          "(D) Unless"
+        ],
+        answer: 1,
+        rule: "空所の後ろは the inclement weather（悪天候）という「名詞句」のみで、S+V（節）がありません。したがって前置詞が必要です。(A) Although や (D) Unless は接続詞なので後ろに S+V が必要。(B) Despite は前置詞で「〜にもかかわらず」の意味になり、文脈に完璧に合致します。",
+        tips: "【秒殺技】後ろが名詞句だけなら接続詞 Although は即消去！前置詞 Despite を一発選択！"
+      },
+      {
+        id: 3,
+        category: "語彙・定型表現（〜の資格がある）",
+        text: "Full-time employees who have completed at least one year of service are ------- to apply for tuition reimbursement.",
+        options: [
+          "(A) eligible",
+          "(B) accessible",
+          "(C) reliable",
+          "(D) durable"
+        ],
+        answer: 0,
+        rule: "「be eligible to do / for 名詞」は「〜を受ける資格がある、〜の対象となる」というTOEIC最頻出表現です。勤続1年以上の正社員が授業料の払い戻しを申請する資格がある、という文脈に合致します。(B) accessible（利用しやすい）、(C) reliable（信頼できる）、(D) durable（耐久性のある）。",
+        tips: "【秒殺技】be eligible to do / for 〜 はTOEICの人事・福利厚生文脈で超頻出の鉄板コロケーション！"
+      },
+      {
+        id: 4,
+        category: "代名詞（〜したい人々：Those who）",
+        text: "------- wishing to participate in the leadership workshop must register by Friday noon.",
+        options: [
+          "(A) Those",
+          "(B) Anyone",
+          "(C) Whoever",
+          "(D) Which"
+        ],
+        answer: 0,
+        rule: "「Those wishing to do」は「Those who wish to do」の分詞短縮形で、「〜することを希望する人々」という意味の複数扱いの主語になります。(B) Anyone は単数扱いのため、分詞修飾ではなく通常 Anyone who wishes の形をとります。(C) Whoever は接続詞の働きを持ち、後ろに S+V が必要です。",
+        tips: "【秒殺技】「------- wishing to do」の形を見たら、Those wishing to do（希望者の方々）を瞬殺！"
+      },
+      {
+        id: 5,
+        category: "文法（提案・要求動詞のthat節は動詞原形）",
+        text: "The compliance officer recommended that every employee ------- the updated safety guidelines immediately.",
+        options: [
+          "(A) reviews",
+          "(B) reviewed",
+          "(C) review",
+          "(D) reviewing"
+        ],
+        answer: 2,
+        rule: "recommend, suggest, request などの「提案・要求・命令」を表す動詞に続く that 節の中では、主語が三人称単数（every employee）であっても、助動詞 should が省略されて【動詞の原形】が使われます。したがって三人称単数の -s が付かない (C) review が正解です。",
+        tips: "【秒殺技】recommend that S + [動詞の原形]！三単現の -s や過去形を選ばないよう注意！"
+      },
+      {
+        id: 6,
+        category: "語彙（仮の、暫定的な）",
+        text: "The project manager announced a ------- schedule for the software launch, noting that dates might shift based on testing results.",
+        options: [
+          "(A) tentative",
+          "(B) substantial",
+          "(C) perpetual",
+          "(D) redundant"
+        ],
+        answer: 0,
+        rule: "空所の後ろで「テスト結果次第で日程が変わる可能性がある」と述べているため、空所には「仮の、暫定的な」という意味の (A) tentative が入ります。tentative schedule（仮日程・暫定スケジュール）はTOEIC頻出表現です。(B) substantial（相当な、多大な）、(C) perpetual（永続する）、(D) redundant（不要な、余剰の）。",
+        tips: "【秒殺技】dates might shift（変更の可能性） ➡️ tentative schedule（仮の予定）を一撃で連想！"
+      },
+      {
+        id: 7,
+        category: "語法（be dedicated to doing）",
+        text: "Our consulting firm is dedicated to ------- clients optimize their global supply chains.",
+        options: [
+          "(A) help",
+          "(B) helps",
+          "(C) helping",
+          "(D) helped"
+        ],
+        answer: 2,
+        rule: "「be dedicated to + 動名詞(-ing) / 名詞」で「〜することに専念している、尽力している」という意味を表します。この to は不定詞ではなく前置詞であるため、後ろには動詞の原形ではなく動名詞の (C) helping が入ります（be committed to doing と同義の超重要構文）。",
+        tips: "【秒殺技】be dedicated to / be committed to の to は前置詞！後ろは -ing（動名詞）一択！"
+      },
+      {
+        id: 8,
+        category: "接続詞（条件：provided that）",
+        text: "You may use company vehicles for business travel ------- that you have a valid international driving permit.",
+        options: [
+          "(A) in order",
+          "(B) provided",
+          "(C) as well",
+          "(D) regarding"
+        ],
+        answer: 1,
+        rule: "「provided that S + V」は「〜という条件で、もし〜ならば（= if / as long as）」という意味の接続詞節を導きます。(A) in order that（〜するために：目的）、(C) as well as（前置詞句）、(D) regarding（前置詞：〜に関して）。文脈「有効な国際免許証を持っているという条件で、社用車を使用できる」に合致します。",
+        tips: "【秒殺技】[ ------- ] that S + V で条件を表すなら provided that / providing that をマーク！"
+      },
+      {
+        id: 9,
+        category: "語彙（収容する、受け入れる）",
+        text: "The grand ballroom at the hotel is large enough to ------- up to five hundred banquet guests.",
+        options: [
+          "(A) accommodate",
+          "(B) evaluate",
+          "(C) compile",
+          "(D) designate"
+        ],
+        answer: 0,
+        rule: "accommodate は「（人数を）収容する、（要求を）受け入れる」という意味の多義語で、TOEICではホテルやホールが「〜名の客を収容できる」という文脈で頻出します。(B) evaluate（評価する）、(C) compile（編集・収集する）、(D) designate（指定する）。",
+        tips: "【秒殺技】ballroom / venue is large enough to [accommodate] guests（〜名の客を収容するのに十分な広さ）！"
+      },
+      {
+        id: 10,
+        category: "品詞（名詞を修飾する形容詞）",
+        text: "Due to a recent increase in production volume, the factory needs to hire ------- technicians.",
+        options: [
+          "(A) addition",
+          "(B) additionally",
+          "(C) additional",
+          "(D) additive"
+        ],
+        answer: 2,
+        rule: "空所の直後にある technicians（技術者たち）は名詞です。名詞を前から修飾できるのは「形容詞」なので、接尾辞 -al を持つ (C) additional（追加の）が正解です。(A) addition は名詞、(B) additionally は副詞、(D) additive は名詞（添加物）または形容詞（付加的な）。",
+        tips: "【秒殺技】名詞 technicians の前 ➡️ 形容詞 -al（additional technicians: 追加の技術者）！"
+      },
+      {
+        id: 11,
+        category: "前置詞（〜の前に：prior to）",
+        text: "All visitors are required to check in at the reception desk ------- entering the research facility.",
+        options: [
+          "(A) prior to",
+          "(B) ahead",
+          "(C) whereas",
+          "(D) along"
+        ],
+        answer: 0,
+        rule: "「prior to + 名詞 / 動名詞」は「〜の前に（= before）」という意味の前置詞句です。後ろに entering the research facility（動名詞句）が続いているため、前置詞の (A) prior to が正解。(B) ahead は of が必要（ahead of）、(C) whereas は接続詞（〜である一方で）、(D) along は「〜に沿って」。",
+        tips: "【秒殺技】prior to -ing ＝ before -ing（〜する前に）！TOEICの最頻出フォーマル前置詞！"
+      },
+      {
+        id: 12,
+        category: "分詞形容詞（尊敬されている：respected）",
+        text: "Dr. Alvarez is a highly ------- researcher who has published over thirty papers on renewable energy.",
+        options: [
+          "(A) respected",
+          "(B) respecting",
+          "(C) respects",
+          "(D) respectful"
+        ],
+        answer: 0,
+        rule: "名詞 researcher（研究者）を修飾する分詞形容詞です。研究者は周囲から「高く尊敬・評価されている」側（受動の関係）なので、過去分詞の (A) respected が正解です。「a highly respected researcher」は定番の表現。(D) respectful は「（相手に対して）敬意を表す、礼儀正しい」という意味になり文脈不適。",
+        tips: "【秒殺技】highly respected（高く評価されている・高名な）はTOEICの人物紹介で超頻出！"
+      },
+      {
+        id: 13,
+        category: "語彙（機密の、秘密の）",
+        text: "The contents of the merger negotiations must remain strictly ------- until the official press conference.",
+        options: [
+          "(A) reluctant",
+          "(B) confidential",
+          "(C) preliminary",
+          "(D) ambiguous"
+        ],
+        answer: 1,
+        rule: "「remain confidential」は「機密のままである、極秘に保たれる」という意味の最重要ビジネスコロケーションです。記者会見まで合併交渉の内容を秘密にしておく、という文脈に完璧に合致します。(A) reluctant（気の進まない）、(C) preliminary（予備的な）、(D) ambiguous（曖昧な）。",
+        tips: "【秒殺技】remain strictly confidential（厳重な機密として保たれる）は契約・M&A文書の定番！"
+      },
+      {
+        id: 14,
+        category: "時制・受動態（過去の点検が行われた）",
+        text: "A comprehensive inspection of the bridge ------- by municipal engineers last Thursday.",
+        options: [
+          "(A) conducts",
+          "(B) was conducted",
+          "(C) will conduct",
+          "(D) has conducted"
+        ],
+        answer: 1,
+        rule: "文末に明確な過去を表す「last Thursday（先週の木曜日）」があるため、過去時制が必要です。さらに主語が「A comprehensive inspection（包括的な点検）」であり、点検は技術者によって「行われる側（受動態）」なので、受動態の過去形である (B) was conducted が正解です。",
+        tips: "【秒殺技】last Thursday（過去）＋ 主語が「点検」なので受動態 ➡️ was conducted 秒殺！"
+      },
+      {
+        id: 15,
+        category: "語彙・副詞（それぞれ、めいめいに）",
+        text: "Sales representatives in Tokyo and London were awarded first and second place, -------.",
+        options: [
+          "(A) exceptionally",
+          "(B) consecutively",
+          "(C) respectively",
+          "(D) alternately"
+        ],
+        answer: 2,
+        rule: "「respectively」は文末に置かれて「それぞれ、めいめいに（並べられた順番に対応して）」という意味を表します。「東京とロンドンの営業担当者が、それぞれ1位と2位を受賞した」となります。(A) exceptionally（例外的に、極めて）、(B) consecutively（連続して）、(D) alternately（交互に）。",
+        tips: "【秒殺技】A and B ... 1st and 2nd, respectively（AとBがそれぞれ1位と2位）の構文パターン！"
+      }
+    ];
+
+    let currentQuestionIdx = 0;
+    let score = 0;
+    let answered = false;
+
+    function renderQuestion() {
+      answered = false;
+      const q = questions[currentQuestionIdx];
+      
+      document.getElementById("progress-text").textContent = `第 ${currentQuestionIdx + 1} 問 / ${questions.length} 問`;
+      const progressPercent = ((currentQuestionIdx + 1) / questions.length) * 100;
+      document.getElementById("progress-bar").style.width = `${progressPercent}%`;
+
+      document.getElementById("question-category").textContent = q.category;
+      document.getElementById("question-text").textContent = q.text;
+
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "w-full text-left p-4 rounded-xl border border-[var(--border-color)] bg-slate-800/80 hover:bg-slate-700/80 font-medium text-sm sm:text-base transition-all duration-150 flex items-center justify-between";
+        btn.innerHTML = `<span>${opt}</span><span class="status-icon text-lg font-bold"></span>`;
+        btn.onclick = () => selectOption(idx, btn);
+        optionsContainer.appendChild(btn);
+      });
+
+      document.getElementById("explanation-container").classList.add("hidden");
+      document.getElementById("next-btn").classList.add("hidden");
+    }
+
+    function selectOption(selectedIdx, btnElement) {
+      if (answered) return;
+      answered = true;
+
+      const q = questions[currentQuestionIdx];
+      const isCorrect = selectedIdx === q.answer;
+      if (isCorrect) score++;
+
+      const optionBtns = document.getElementById("options-container").children;
+      for (let i = 0; i < optionBtns.length; i++) {
+        const btn = optionBtns[i];
+        btn.disabled = true;
+        btn.classList.remove("hover:bg-slate-700/80");
+
+        if (i === q.answer) {
+          btn.classList.add("border-emerald-500", "bg-emerald-950/60", "text-emerald-200");
+          btn.querySelector(".status-icon").textContent = "✓";
+        } else if (i === selectedIdx && !isCorrect) {
+          btn.classList.add("border-rose-500", "bg-rose-950/60", "text-rose-200");
+          btn.querySelector(".status-icon").textContent = "✕";
+        } else {
+          btn.classList.add("opacity-50");
+        }
+      }
+
+      const expContainer = document.getElementById("explanation-container");
+      const badge = document.getElementById("explanation-badge");
+      const content = document.getElementById("explanation-content");
+
+      expContainer.classList.remove("hidden");
+
+      if (isCorrect) {
+        expContainer.className = "rounded-xl p-5 border border-emerald-800/60 bg-emerald-950/30 mb-6";
+        badge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+        badge.textContent = "⭕️ 正解！";
+      } else {
+        expContainer.className = "rounded-xl p-5 border border-rose-800/60 bg-rose-950/30 mb-6";
+        badge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold mb-3 bg-rose-500/20 text-rose-300 border border-rose-500/40";
+        badge.textContent = `❌ 不正解（正解: ${q.options[q.answer].split(" ")[0]}）`;
+      }
+
+      content.innerHTML = `
+        <p class="text-slate-200">${q.rule}</p>
+        <div class="mt-3 p-3 bg-slate-900/80 rounded-lg border border-slate-700/60 text-amber-300 text-xs sm:text-sm font-semibold">
+          💡 ${q.tips}
+        </div>
+      `;
+
+      const nextBtn = document.getElementById("next-btn");
+      nextBtn.classList.remove("hidden");
+      if (currentQuestionIdx === questions.length - 1) {
+        nextBtn.querySelector("span:first-child").textContent = "結果を見る";
+      }
+    }
+
+    document.getElementById("next-btn").onclick = () => {
+      currentQuestionIdx++;
+      if (currentQuestionIdx < questions.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    };
+
+    function showResults() {
+      document.getElementById("quiz-container").classList.add("hidden");
+      const resultScreen = document.getElementById("result-screen");
+      resultScreen.classList.remove("hidden");
+
+      document.getElementById("final-score").textContent = `${score} / ${questions.length}`;
+
+      const percentage = Math.round((score / questions.length) * 100);
+      let comment = "";
+      let emoji = "🎯";
+
+      if (percentage === 100) {
+        emoji = "🏆";
+        comment = "完璧です！700点レベルの重要文法・頻出語彙を完全制覇しました！本番でも瞬殺できます。";
+      } else if (percentage >= 80) {
+        emoji = "✨";
+        comment = "素晴らしい得点力！700点突破水準をしっかりクリアしています。間違えた問題の秒殺技だけ確認しておきましょう。";
+      } else if (percentage >= 60) {
+        emoji = "💪";
+        comment = "あと一歩！頻出パターンのコツを掴めば一気に8割を超えられます。解説をチェックしてリトライしてみましょう。";
+      } else {
+        emoji = "🔥";
+        comment = "伸び代たっぷりです！TOEIC頻出のコロケーションと品詞ルールをこの15問で一気にインプットしましょう。";
+      }
+
+      document.getElementById("result-emoji").textContent = emoji;
+      document.getElementById("score-comment").textContent = comment;
+    }
+
+    function restartQuiz() {
+      currentQuestionIdx = 0;
+      score = 0;
+      document.getElementById("result-screen").classList.add("hidden");
+      document.getElementById("quiz-container").classList.remove("hidden");
+      document.getElementById("next-btn").querySelector("span:first-child").textContent = "次の問題へ";
+      renderQuestion();
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
