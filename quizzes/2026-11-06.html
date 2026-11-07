@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOEIC Part 6 & Part 2 弱点特訓クイズ (全11問)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --correct: #10b981;
+      --wrong: #ef4444;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 sm:p-6 flex items-center justify-center">
+  <div class="w-full max-w-2xl bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl shadow-2xl p-6 sm:p-8">
+    
+    <!-- トップへ戻るリンク -->
+    <div class="mb-4">
+      <a href="../index.html" class="inline-flex items-center text-xs font-semibold text-[var(--accent)] hover:underline">
+        <span>← クイズ一覧に戻る</span>
+      </a>
+    </div>
+
+    <!-- ヘッダー / 進捗 -->
+    <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-4 mb-6">
+      <div>
+        <span class="text-xs uppercase tracking-wider text-[var(--accent)] font-bold">公式11 Test 2 Part 6 & Part 2</span>
+        <h1 class="text-xl sm:text-2xl font-bold mt-1">弱点11問 瞬殺特訓</h1>
+      </div>
+      <div class="text-right">
+        <span id="progress-text" class="text-sm font-semibold text-[var(--text-muted)]">第 1 問 / 11 問</span>
+        <div class="w-28 sm:w-36 bg-slate-700 h-2 rounded-full mt-2 overflow-hidden">
+          <div id="progress-bar" class="bg-[var(--accent)] h-full transition-all duration-300" style="width: 9.1%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- クイズ本体 -->
+    <div id="quiz-container">
+      <!-- 問題文 -->
+      <div class="mb-6">
+        <span id="question-category" class="inline-block px-2.5 py-1 text-xs font-semibold rounded-md bg-blue-900/60 text-blue-300 border border-blue-700/50 mb-3">カテゴリ</span>
+        <p id="question-text" class="text-lg sm:text-xl font-medium leading-relaxed"></p>
+      </div>
+
+      <!-- 選択肢ボタン -->
+      <div id="options-container" class="space-y-3 mb-6"></div>
+
+      <!-- 解説パネル -->
+      <div id="explanation-container" class="hidden bg-slate-900/90 border border-slate-700 rounded-xl p-5 mb-6">
+        <div id="result-badge" class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-sm font-bold mb-3"></div>
+        <div class="space-y-3 text-sm leading-relaxed">
+          <div>
+            <span class="text-slate-400 font-semibold block text-xs uppercase tracking-wider mb-1">💡 文法・論理の根拠</span>
+            <p id="rule-text" class="text-slate-200"></p>
+          </div>
+          <div class="pt-2 border-t border-slate-800">
+            <span class="text-amber-400 font-semibold block text-xs uppercase tracking-wider mb-1">⚡ 秒殺技Tips</span>
+            <p id="tips-text" class="text-amber-200/90"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 次へボタン -->
+      <button id="next-btn" class="hidden w-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-bold py-3.5 px-6 rounded-xl transition duration-200 shadow-lg shadow-blue-500/20">
+        次の問題へ →
+      </button>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="score-container" class="hidden text-center py-8">
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-950 border-2 border-blue-500/30 text-blue-400 mb-4 text-3xl">
+        🎯
+      </div>
+      <h2 class="text-2xl font-bold mb-2">演習完了！</h2>
+      <p id="score-summary" class="text-lg text-[var(--text-muted)] mb-6"></p>
+      
+      <div class="max-w-md mx-auto bg-slate-900/80 border border-slate-700 rounded-xl p-4 mb-8 text-left text-sm space-y-2">
+        <div class="font-semibold text-slate-300 border-b border-slate-800 pb-1 mb-2">📝 振り返りサマリー</div>
+        <p class="text-slate-400 text-xs leading-relaxed">
+          Part 2の二者択一（A or B）での「Yes/No即消去」、および「確認します/調べてみます」系の鉄板正解パターンを意識し、Part 6の一文挿入では代名詞や上位概念・具体例の接着剤を見抜くことで、本番でも迷わず20秒で仕留められます！
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button id="copy-btn" class="inline-flex items-center justify-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl transition duration-200">
+          <span>📋 結果をコピー</span>
+        </button>
+        <button onclick="location.reload()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-xl transition duration-200">
+          もう一度挑戦する
+        </button>
+        <a href="../index.html" class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl transition duration-200">
+          クイズ一覧に戻る
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        category: "Part 6：語彙・文脈（動作の名詞化）",
+        text: "Before replacing a cracked screen on a customer's mobile phone, always examine the phone thoroughly to identify additional issues, cosmetic or otherwise. This ------- will ensure that we will not be held responsible for a feature that was already flawed.",
+        options: [
+          "(A) device",
+          "(B) individual",
+          "(C) inspection",
+          "(D) skill"
+        ],
+        answer: 2,
+        rule: "前文で「追加の問題がないかスマホを徹底的に検査してください（examine the phone thoroughly）」と指示されています。この動作を受けて「This inspection（この検査）」が主語となるのが文脈上最も自然です。device（機器）ではなく、検査という行為そのものを指しています。",
+        tips: "前文の動詞 examine ➡️ 空所の「This + 名詞（inspection）」という言い換えリレーに即座に反応！"
+      },
+      {
+        id: 2,
+        category: "Part 6：一文挿入・代名詞の指示関係",
+        text: "If you detect evidence of corrosion or moisture, make a note of it. [ ------- ]. Also, make sure to check the key components.",
+        options: [
+          "(A) We will contact the customer soon.",
+          "(B) This is likely a sign of water damage.",
+          "(C) Hold the button down for five seconds.",
+          "(D) The two pieces may not be missing."
+        ],
+        answer: 1,
+        rule: "直前の文で「腐食や湿気（corrosion or moisture）の痕跡を発見したら記録してください」とあります。この「腐食や湿気」を代名詞 This で受けて「これは水濡れ損傷の兆候である可能性が高い」と説明を補足している (B) が前後の論理を完璧に繋ぎます。",
+        tips: "選択肢の代名詞「This」が直前の名詞（corrosion or moisture）を指しているかチェック！"
+      },
+      {
+        id: 3,
+        category: "Part 6：一文挿入・因果関係と文脈",
+        text: "A dedicated battery manufacturing complex is also slated for construction near the plant. [ ------- ]. Residents are looking forward to this development.",
+        options: [
+          "(A) A prototype vehicle was on exhibit at the Beijing car show last year.",
+          "(B) Hwan Automotive has won awards for its innovative technology.",
+          "(C) Premium options are available at additional cost.",
+          "(D) Altogether, the expansion is expected to create 5,500 new jobs."
+        ],
+        answer: 3,
+        rule: "直前で新工場の建設予定（slated for construction）が述べられ、直後で「地域住民はこの開発を心待ちにしている（Residents are looking forward to...）」と続きます。地域住民が工場建設を大歓迎する最大の根拠は「地元での新規雇用の創出（create 5,500 new jobs）」です。",
+        tips: "直後の「住民の歓迎」と論理的に結びつく「雇用創出（jobs / employment）」を選ぶ！"
+      },
+      {
+        id: 4,
+        category: "Part 6：語彙・前置詞toの目的語",
+        text: "This message is a reminder that you have claimed a free ticket to an exclusive virtual screening of So Then They Walked. The film becomes available to ------- on our streaming platform at 6 P.M. GMT on Thursday, 12 December.",
+        options: [
+          "(A) shows",
+          "(B) actors",
+          "(C) benefits",
+          "(D) viewers"
+        ],
+        answer: 3,
+        rule: "バーチャル上映会のチケットを獲得したユーザーへの案内文。「映画は当社のストリーミングプラットフォーム上で、木曜午後6時に【視聴者（viewers）】に対して視聴可能になります」という文脈。available to 人（viewers）が自然です。",
+        tips: "ストリーミング配信で「利用可能（available to 〜）」になる対象は「視聴者（viewers）」！"
+      },
+      {
+        id: 5,
+        category: "Part 6：一文挿入・上位概念への話題展開",
+        text: "We can all help by turning off nonessential lights from midnight to 6:00 A.M. [ ------- ]. Many shops have bright floodlights illuminating their storefronts even when they are closed. If you must have a light on at night, you should direct it downward.",
+        options: [
+          "(A) A trail map is recommended.",
+          "(B) We can supply them if needed.",
+          "(C) This practice applies to businesses too.",
+          "(D) It depends on the particular species."
+        ],
+        answer: 2,
+        rule: "直前で「みんなで夜間消灯に協力しよう」と呼びかけ、空所の直後で「多くの店舗（Many shops）が閉店後も店頭を照らしている」と具体例が始まります。(C)の「この実践は事業者・店舗にも適用されます（This practice applies to businesses too.）」が入ることで、一般住民から店舗への話題の橋渡しになります。",
+        tips: "直後の具体例「Many shops」の上位概念である「businesses too」が話題の接着剤！"
+      },
+      {
+        id: 6,
+        category: "Part 2：依頼への快諾応答",
+        text: "Can you help me revise this budget report?",
+        options: [
+          "(A) Sure, I'm free this afternoon.",
+          "(B) A pair of sunglasses.",
+          "(C) That was a great book."
+        ],
+        answer: 0,
+        rule: "「この予算報告書の修正を手伝ってもらえますか？」という依頼（Can you help me ~?）に対し、「Sure（いいですよ、今日の午後は空いています）」と引き受ける王道の応答です。(B)(C)は無関係な名詞・感想です。",
+        tips: "Can you help me ~? には「Sure / Of course / I'd be happy to」で即答！"
+      },
+      {
+        id: 7,
+        category: "Part 2：二者択一・Yes/No即消去",
+        text: "Should we take the bus or the train downtown?",
+        options: [
+          "(A) Yes, they should.",
+          "(B) About every half an hour.",
+          "(C) The train seats are very comfortable."
+        ],
+        answer: 2,
+        rule: "「バスで行くべきですか、それとも電車で行くべきですか？」という二者択一（A or B）の質問です。二者択一に Yes / No で答えることは絶対にできないため、(A)の「Yes」が聞こえた瞬間に即消去！「電車の座席はとても快適ですよ（＝電車で行こう）」と一方を推奨する(C)が正解。",
+        tips: "A or B の二者択一疑問文で「Yes / No」が聞こえたら0.1秒でゴミ箱行き！"
+      },
+      {
+        id: 8,
+        category: "Part 2：間接応答・確認提案パターン",
+        text: "Where is the history museum that Sandrine recommended?",
+        options: [
+          "(A) In the storage closet.",
+          "(B) Let's check online.",
+          "(C) Yes, at eleven thirty."
+        ],
+        answer: 1,
+        rule: "「サンドリーヌが推薦してくれた歴史博物館はどこにありますか？」という場所の質問（Where ~?）です。(A)「物置の中」は場所の単語を使った明らかな罠。(C)はWhereに対してYesと答えているため即消去。「ネットで調べてみよう（Let's check online）」と調べる提案をする間接応答(B)が正解。",
+        tips: "「Let's check online / Look at the website」などの調査・確認系は99%正解！"
+      },
+      {
+        id: 9,
+        category: "Part 2：提案への理由付け賛同",
+        text: "We should hire another salesperson.",
+        options: [
+          "(A) Several applications.",
+          "(B) The store has had a lot of customers lately.",
+          "(C) Yes, I'd like some coffee."
+        ],
+        answer: 1,
+        rule: "「もう1人販売員を雇うべきです」という提案に対し、(A)は hire からの連想語（応募書類）を並べただけのトラップ。(B)「この店は最近たくさんのお客さんが来ていますからね」と、増員が必要な理由・根拠を述べて同意する高度なキャッチボールが正解です。",
+        tips: "名詞だけの断片（Several applications）は連想トラップ。会話の根拠を述べている文を選ぶ！"
+      },
+      {
+        id: 10,
+        category: "Part 2：二者択一・第三者確認保留",
+        text: "Will replacing the windows take more than a month or less than a month to do?",
+        options: [
+          "(A) That clock is quite impressive.",
+          "(B) A monthly budget.",
+          "(C) I'll need to check with the installers."
+        ],
+        answer: 2,
+        rule: "「窓の交換には1か月以上かかりますか、それとも1か月未満ですか？」という期間の二者択一です。(B)は month の音の引っ掛け。(C)「取り付け業者に確認する必要があります」と、第三者に確認する旨を伝える「保留系」が正解です。",
+        tips: "「I need to check with ~（〜に確認してみないと）」はTOEIC鉄板の正解パターン！"
+      },
+      {
+        id: 11,
+        category: "Part 2：二者択一・Yes/No消去と間接応答",
+        text: "Would you like to look at the slides now or later?",
+        options: [
+          "(A) This is a very busy time of day.",
+          "(B) Yes, I'm still looking for a new one.",
+          "(C) No, they're in the conference center."
+        ],
+        answer: 0,
+        rule: "「スライドを今見たいですか、それとも後で見たいですか？」という二者択一（now or later）です。(B)の Yes も (C)の No も即座に消去できます！(A)「今はとても忙しい時間帯です（＝だから後で見たい）」と遠回しに理由を伝える間接応答が残ります。",
+        tips: "now or later に Yes/No で答えている(B)(C)を一瞬で消し去れば(A)しか残らない！"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let userAnswers = [];
+
+    const questionCategoryEl = document.getElementById("question-category");
+    const questionTextEl = document.getElementById("question-text");
+    const optionsContainerEl = document.getElementById("options-container");
+    const explanationContainerEl = document.getElementById("explanation-container");
+    const resultBadgeEl = document.getElementById("result-badge");
+    const ruleTextEl = document.getElementById("rule-text");
+    const tipsTextEl = document.getElementById("tips-text");
+    const nextBtn = document.getElementById("next-btn");
+    const progressTextEl = document.getElementById("progress-text");
+    const progressBarEl = document.getElementById("progress-bar");
+    const quizContainerEl = document.getElementById("quiz-container");
+    const scoreContainerEl = document.getElementById("score-container");
+    const scoreSummaryEl = document.getElementById("score-summary");
+    const copyBtn = document.getElementById("copy-btn");
+
+    function loadQuestion() {
+      const q = questions[currentQuestionIndex];
+      questionCategoryEl.textContent = q.category;
+      questionTextEl.textContent = q.text;
+
+      progressTextEl.textContent = `第 ${currentQuestionIndex + 1} 問 / ${questions.length} 問`;
+      const progressPercent = ((currentQuestionIndex + 1) / questions.length) * 100;
+      progressBarEl.style.width = `${progressPercent}%`;
+
+      optionsContainerEl.innerHTML = "";
+      explanationContainerEl.classList.add("hidden");
+      nextBtn.classList.add("hidden");
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "w-full text-left p-4 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700/80 transition duration-150 font-medium text-slate-200 flex items-center justify-between";
+        btn.innerHTML = `<span>${opt}</span><span class="icon text-lg font-bold"></span>`;
+        btn.onclick = () => selectOption(idx, btn);
+        optionsContainerEl.appendChild(btn);
+      });
+    }
+
+    function selectOption(selectedIndex, selectedBtn) {
+      const q = questions[currentQuestionIndex];
+      const buttons = optionsContainerEl.querySelectorAll("button");
+      buttons.forEach(btn => btn.disabled = true);
+
+      const isCorrect = selectedIndex === q.answer;
+      userAnswers.push({
+        id: q.id,
+        isCorrect: isCorrect,
+        selected: selectedIndex,
+        answer: q.answer
+      });
+
+      if (isCorrect) {
+        score++;
+        selectedBtn.classList.remove("border-slate-700", "bg-slate-800/80");
+        selectedBtn.classList.add("border-emerald-500", "bg-emerald-950/60", "text-emerald-200");
+        selectedBtn.querySelector(".icon").innerHTML = "✓";
+        selectedBtn.querySelector(".icon").classList.add("text-emerald-400");
+
+        resultBadgeEl.className = "inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-sm font-bold mb-3 bg-emerald-950 text-emerald-300 border border-emerald-700/50";
+        resultBadgeEl.innerHTML = "<span>✓</span><span>正解！素晴らしい判断です</span>";
+      } else {
+        selectedBtn.classList.remove("border-slate-700", "bg-slate-800/80");
+        selectedBtn.classList.add("border-rose-500", "bg-rose-950/60", "text-rose-200");
+        selectedBtn.querySelector(".icon").innerHTML = "✕";
+        selectedBtn.querySelector(".icon").classList.add("text-rose-400");
+
+        const correctBtn = buttons[q.answer];
+        correctBtn.classList.remove("border-slate-700", "bg-slate-800/80");
+        correctBtn.classList.add("border-emerald-500", "bg-emerald-950/40", "text-emerald-300");
+        correctBtn.querySelector(".icon").innerHTML = "✓";
+        correctBtn.querySelector(".icon").classList.add("text-emerald-400");
+
+        resultBadgeEl.className = "inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-sm font-bold mb-3 bg-rose-950 text-rose-300 border border-rose-700/50";
+        resultBadgeEl.innerHTML = "<span>✕</span><span>不正解（ここで急所を押さえましょう）</span>";
+      }
+
+      ruleTextEl.textContent = q.rule;
+      tipsTextEl.textContent = q.tips;
+      explanationContainerEl.classList.remove("hidden");
+
+      if (currentQuestionIndex < questions.length - 1) {
+        nextBtn.textContent = "次の問題へ →";
+      } else {
+        nextBtn.textContent = "結果を見る 🎉";
+      }
+      nextBtn.classList.remove("hidden");
+    }
+
+    nextBtn.onclick = () => {
+      if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion();
+      } else {
+        showScore();
+      }
+    };
+
+    function showScore() {
+      quizContainerEl.classList.add("hidden");
+      scoreContainerEl.classList.remove("hidden");
+
+      const percentage = Math.round((score / questions.length) * 100);
+      scoreSummaryEl.innerHTML = `正解数: <span class="text-white font-bold text-2xl">${score}</span> / ${questions.length} 問 (${percentage}%)`;
+    }
+
+    copyBtn.onclick = () => {
+      const percentage = Math.round((score / questions.length) * 100);
+      const missed = userAnswers.filter(a => !a.isCorrect).map(a => `問${a.id}`).join(", ");
+      const missedText = missed ? `ミス問: ${missed}` : "全問正解！🎉";
+      
+      const copyText = `【TOEIC 公式11 Test 2 Part 6 & Part 2 特訓クイズ結果】\n正解数: ${score} / ${questions.length} (${percentage}%)\n${missedText}\n#TOEIC700点突破`;
+
+      navigator.clipboard.writeText(copyText).then(() => {
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = "<span>✓ コピーしました！</span>";
+        copyBtn.classList.remove("bg-emerald-600", "hover:bg-emerald-500");
+        copyBtn.classList.add("bg-blue-600", "hover:bg-blue-500");
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+          copyBtn.classList.remove("bg-blue-600", "hover:bg-blue-500");
+          copyBtn.classList.add("bg-emerald-600", "hover:bg-emerald-500");
+        }, 2000);
+      });
+    };
+
+    // 初期読み込み
+    loadQuestion();
+  </script>
+</body>
+</html>
