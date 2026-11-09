@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOEIC Test 2 Part 3・4・7A 弱点特訓クイズ (全12問)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --correct: #10b981;
+      --wrong: #ef4444;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 sm:p-6 flex items-center justify-center">
+  <div class="w-full max-w-2xl bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl shadow-2xl p-6 sm:p-8">
+    
+    <!-- トップへ戻るリンク -->
+    <div class="mb-4">
+      <a href="../index.html" class="inline-flex items-center text-xs font-semibold text-[var(--accent)] hover:underline">
+        <span>← クイズ一覧に戻る</span>
+      </a>
+    </div>
+
+    <!-- ヘッダー / 進捗 -->
+    <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-4 mb-6">
+      <div>
+        <span class="text-xs uppercase tracking-wider text-[var(--accent)] font-bold">公式11 Test 2 Part 3・4・7A</span>
+        <h1 class="text-xl sm:text-2xl font-bold mt-1">弱点12問 パラフレーズ瞬殺特訓</h1>
+      </div>
+      <div class="text-right">
+        <span id="progress-text" class="text-sm font-semibold text-[var(--text-muted)]">第 1 問 / 12 問</span>
+        <div class="w-28 sm:w-36 bg-slate-700 h-2 rounded-full mt-2 overflow-hidden">
+          <div id="progress-bar" class="bg-[var(--accent)] h-full transition-all duration-300" style="width: 8.3%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- クイズ本体 -->
+    <div id="quiz-container">
+      <!-- 問題文 -->
+      <div class="mb-6">
+        <span id="question-category" class="inline-block px-2.5 py-1 text-xs font-semibold rounded-md bg-blue-900/60 text-blue-300 border border-blue-700/50 mb-3">カテゴリ</span>
+        <p id="question-text" class="text-lg sm:text-xl font-medium leading-relaxed"></p>
+      </div>
+
+      <!-- 選択肢ボタン -->
+      <div id="options-container" class="space-y-3 mb-6"></div>
+
+      <!-- 解説パネル -->
+      <div id="explanation-container" class="hidden bg-slate-900/90 border border-slate-700 rounded-xl p-5 mb-6">
+        <div id="result-badge" class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-sm font-bold mb-3"></div>
+        <div class="space-y-3 text-sm leading-relaxed">
+          <div>
+            <span class="text-slate-400 font-semibold block text-xs uppercase tracking-wider mb-1">💡 文法・論理の根拠</span>
+            <p id="rule-text" class="text-slate-200"></p>
+          </div>
+          <div class="pt-2 border-t border-slate-800">
+            <span class="text-amber-400 font-semibold block text-xs uppercase tracking-wider mb-1">⚡ 秒殺技Tips</span>
+            <p id="tips-text" class="text-amber-200/90"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 次へボタン -->
+      <button id="next-btn" class="hidden w-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-bold py-3.5 px-6 rounded-xl transition duration-200 shadow-lg shadow-blue-500/20">
+        次の問題へ →
+      </button>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="score-container" class="hidden text-center py-8">
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-950 border-2 border-blue-500/30 text-blue-400 mb-4 text-3xl">
+        🎯
+      </div>
+      <h2 class="text-2xl font-bold mb-2">演習完了！</h2>
+      <p id="score-summary" class="text-lg text-[var(--text-muted)] mb-6"></p>
+      
+      <div class="max-w-md mx-auto bg-slate-900/80 border border-slate-700 rounded-xl p-4 mb-8 text-left text-sm space-y-2">
+        <div class="font-semibold text-slate-300 border-b border-slate-800 pb-1 mb-2">📝 振り返りサマリー</div>
+        <p class="text-slate-400 text-xs leading-relaxed">
+          700点突破の核心は「耳や目で捉えた具体的表現（make priority, large capacity, sponsorなど）を、選択肢の上位概念（expedited service, storage capability, fundingなど）へ瞬時に変換する瞬発力」にあります。この言い換えパターンを体に叩き込みましょう！
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button id="copy-btn" class="inline-flex items-center justify-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl transition duration-200">
+          <span>📋 結果をコピー</span>
+        </button>
+        <button onclick="location.reload()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-xl transition duration-200">
+          もう一度挑戦する
+        </button>
+        <a href="../index.html" class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl transition duration-200">
+          クイズ一覧に戻る
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        category: "Part 4：ビジネス語彙・パラフレーズ",
+        text: "The client asked if the delivery could be moved up: \"I'll be happy to pay extra if you can make this project a priority.\" What is the speaker paying for?",
+        options: [
+          "(A) Additional materials",
+          "(B) Legal fees",
+          "(C) Expedited service",
+          "(D) Staff training"
+        ],
+        answer: 2,
+        rule: "「このプロジェクトを最優先に（make ~ a priority）してもらえるなら、追加料金を支払います」という発言は、「通常より急ぎで処理してもらう迅速・特急対応（expedited service）」に対する支払いを意味します。expedite（〜を早める、迅速に処理する）から派生した超頻出表現です。",
+        tips: "「make a priority（優先する）」や「rush（急ぐ）」が聞こえたら、選択肢の「expedited service」を即マーク！"
+      },
+      {
+        id: 2,
+        category: "Part 4：製品特徴・言い換え",
+        text: "According to product reviews for the new refrigerator model, \"most users commented on the large capacity of the refrigerator.\" What did customers like most?",
+        options: [
+          "(A) The affordable price",
+          "(B) The storage capability",
+          "(C) The stylish design",
+          "(D) The ease of operation"
+        ],
+        answer: 1,
+        rule: "ナレーションの「large capacity（大容量）」は、選択肢の「storage capability（保管・収容能力）」に直接言い換えられています。capacity ＝ storage capability のパラフレーズを見抜くのがポイントです。",
+        tips: "capacity（容量） ➡️ storage capability（収容力）の上位概念言い換え！"
+      },
+      {
+        id: 3,
+        category: "Part 4：話者の役職・上位概念",
+        text: "The speaker says: \"As the chief production officer, I recently led an audit of our manufacturing operations.\" Who is the speaker?",
+        options: [
+          "(A) A sales representative",
+          "(B) A store manager",
+          "(C) A company executive",
+          "(D) A news reporter"
+        ],
+        answer: 2,
+        rule: "「chief production officer（最高生産責任者）」は、CEOやCFOなどと同様に企業の「役員・経営幹部（company executive）」に該当します。具体的なC-level役職名から上位概念の「executive」を選ぶ問題です。",
+        tips: "chief ~ officer（最高〜責任者）や vice president（副社長） ➡️ 選択肢は「executive」！"
+      },
+      {
+        id: 4,
+        category: "Part 4：行動・言い換え",
+        text: "The speaker praises the students because \"they have worked long hours rehearsing to master their roles.\" Why does the speaker praise them?",
+        options: [
+          "(A) Their financial goals were met.",
+          "(B) Their project received positive reviews.",
+          "(C) They solved a problem quickly.",
+          "(D) They dedicated a lot of time to a project."
+        ],
+        answer: 3,
+        rule: "「worked long hours rehearsing（稽古に長時間を費やした）」は、「dedicated a lot of time to a project（プロジェクトに多大な時間を捧げた）」と言い換えられています。dedicate [time] to ~ ＝ spend [time] doing です。",
+        tips: "worked long hours（長時間の作業） ➡️ dedicated a lot of time（多大な時間を捧げた）！"
+      },
+      {
+        id: 5,
+        category: "Part 3：熟語・行動の意図",
+        text: "The manager asks: \"Could you look into how many drivers and vehicles we'd need in order to provide this shuttle service?\" What does the man ask the woman to do?",
+        options: [
+          "(A) Gather some information",
+          "(B) Train some staff",
+          "(C) Clean some vehicles",
+          "(D) Apply for a permit"
+        ],
+        answer: 0,
+        rule: "「look into how many drivers...（何人の運転手が必要か調べる・検討する）」は、具体的な調査を行うことであり、「gather some information（情報を集める）」と言い換えられます。look into ＝ investigate / gather info です。",
+        tips: "look into ~（調べる） ➡️ gather information（情報収集）の王道パターン！"
+      },
+      {
+        id: 6,
+        category: "Part 3：口語表現・行動",
+        text: "The woman asks: \"Can you drop by the pool supply store later today to pick up the new filter cartridge?\" What will the man most likely do later today?",
+        options: [
+          "(A) Submit an invoice",
+          "(B) Clean some equipment",
+          "(C) Post an announcement",
+          "(D) Visit a store"
+        ],
+        answer: 3,
+        rule: "「drop by the store（店に立ち寄る）」という日常口語表現は、「visit a store（店を訪れる）」に言い換えられます。drop by / stop by ＝ visit です。",
+        tips: "drop by / stop by ➡️ visit を反射的に選ぶ！"
+      },
+      {
+        id: 7,
+        category: "Part 3：ビジネス文脈・名詞",
+        text: "The speaker announces: \"Larson Incorporated decided not to sponsor our music festival this year.\" What problem does the woman mention?",
+        options: [
+          "(A) A source of funding has been lost.",
+          "(B) An entertainer is not available.",
+          "(C) Bad weather is predicted.",
+          "(D) A permit has not been approved."
+        ],
+        answer: 0,
+        rule: "「sponsor our music festival（音楽祭をスポンサー・資金援助する）」を取りやめたということは、「A source of funding has been lost（資金源が失われた）」ことを意味します。sponsor（動詞） ➡️ funding（資金）のパラフレーズです。",
+        tips: "sponsor（スポンサー） ➡️ funding（資金提供・財源）！"
+      },
+      {
+        id: 8,
+        category: "Part 7A：文書情報・ヘッダーの役割",
+        text: "A notice shows: \"Best Crown Hair Salon, 11 Beauty Row, Brisbane. Service: Wash, cut, blow-dry. Fee: Please notify us at least 24 hours in advance if you cancel, or you will be subject to a $25 fee.\" What detail is included?",
+        options: [
+          "(A) A price for a haircut",
+          "(B) A business's location",
+          "(C) A store owner's name",
+          "(D) A customer's phone number"
+        ],
+        answer: 1,
+        rule: "ヘッダーの「11 Beauty Row, Brisbane」は事業所の所在地（A business's location）です。本文中の「$25 fee」はキャンセル料であり、カット代金（A price for a haircut）ではないため、(A)は典型的な誤答トラップです。",
+        tips: "数字の金額（$25）に釣られない！何に対する費用か（キャンセル料かカット代か）を冷静に確認！"
+      },
+      {
+        id: 9,
+        category: "Part 7A：Eメールの主旨・目的",
+        text: "Customer Service writes: \"Thank you for contacting us regarding order number 439-628. I see that your order has been delayed... To apologize, we would like to offer you a $25 voucher.\" Why did the representative send the e-mail?",
+        options: [
+          "(A) To respond to an inquiry",
+          "(B) To announce a new service",
+          "(C) To complain about a late order",
+          "(D) To ask that a form be completed"
+        ],
+        answer: 0,
+        rule: "「Thank you for contacting us regarding order...（ご注文に関してご連絡いただきありがとうございます）」から、顧客からの問い合わせに対して返答（respond to an inquiry）していることが分かります。遅延の謝罪ですが、苦情を言っている（complain）のではなく客への対応です。",
+        tips: "カスタマーサポートからのメールは「To respond to an inquiry（問い合わせへの回答）」が鉄板！"
+      },
+      {
+        id: 10,
+        category: "Part 7A：文脈推論・過去の用途",
+        text: "The article states: \"Jordan Cohen purchased the recently vacated building in the Polanco neighborhood where Tomoichi Sushi closed last month, and decided to turn it into a bagel shop.\" What is indicated about the bagel shop?",
+        options: [
+          "(A) It will open at the end of July.",
+          "(B) It has received positive reviews.",
+          "(C) It is in a location that once housed another restaurant.",
+          "(D) It will export bagels to other countries."
+        ],
+        answer: 2,
+        rule: "「先月閉店したTomoichi Sushi（寿司屋）の空き店舗を購入してベーグル店にした」とあるため、「以前別の飲食店が入居していた場所にある（in a location that once housed another restaurant）」が正解です。house は動詞で「〜を収容する」という意味。",
+        tips: "vacated building（空き店舗） ＋ 前の店の名前 ➡️ 「once housed another business」！"
+      },
+      {
+        id: 11,
+        category: "Part 7A：想定読者の特定",
+        text: "A commercial laundry brochure states: \"Some health-care facilities believe managing their linen inventory on their premises is practical. However, our services allow you to focus on your core business of patient care.\" For whom is the brochure most likely intended?",
+        options: [
+          "(A) Hotels",
+          "(B) Hospitals",
+          "(C) Beauty salons",
+          "(D) Manufacturing companies"
+        ],
+        answer: 1,
+        rule: "「health-care facilities（医療施設）」や「patient care（患者のケア）」というキーワードから、この案内は「病院（Hospitals）」に向けられたものであることが分かります。",
+        tips: "health-care / patient care ➡️ 医療機関＝Hospitals！"
+      },
+      {
+        id: 12,
+        category: "Part 7A：比較・パラフレーズ",
+        text: "The marketing firm writes: \"Catalogues and flyers can take weeks to reach potential customers. With a reliable social media team, you can ensure that news about your product will be seen by a large number of people within hours.\" Why is social media marketing effective?",
+        options: [
+          "(A) It reaches the largest number of potential customers.",
+          "(B) It delivers information faster than other methods.",
+          "(C) It can be easily managed by traditional marketing agencies.",
+          "(D) It is less expensive than other methods."
+        ],
+        answer: 1,
+        rule: "紙のチラシは「weeks（何週間もかかる）」のに対し、SNSは「within hours（数時間以内）」で届くと対比されています。つまり「他手法よりも速く情報が届く（delivers information faster than other methods）」ことが理由です。「最も多くの客（the largest number）」と最上級で言い切ってはいないため(A)は不可。",
+        tips: "weeks vs within hours の時間対比 ➡️ 「faster than other methods」！"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let userAnswers = [];
+
+    const questionCategoryEl = document.getElementById("question-category");
+    const questionTextEl = document.getElementById("question-text");
+    const optionsContainerEl = document.getElementById("options-container");
+    const explanationContainerEl = document.getElementById("explanation-container");
+    const resultBadgeEl = document.getElementById("result-badge");
+    const ruleTextEl = document.getElementById("rule-text");
+    const tipsTextEl = document.getElementById("tips-text");
+    const nextBtnEl = document.getElementById("next-btn");
+    const progressBarEl = document.getElementById("progress-bar");
+    const progressTextEl = document.getElementById("progress-text");
+    const quizContainerEl = document.getElementById("quiz-container");
+    const scoreContainerEl = document.getElementById("score-container");
+    const scoreSummaryEl = document.getElementById("score-summary");
+    const copyBtnEl = document.getElementById("copy-btn");
+
+    function loadQuestion() {
+      const q = questions[currentQuestionIndex];
+      questionCategoryEl.textContent = q.category;
+      questionTextEl.textContent = q.text;
+      optionsContainerEl.innerHTML = "";
+      explanationContainerEl.classList.add("hidden");
+      nextBtnEl.classList.add("hidden");
+
+      progressTextEl.textContent = `第 ${currentQuestionIndex + 1} 問 / ${questions.length} 問`;
+      progressBarEl.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "w-full text-left p-4 rounded-xl border border-slate-700 bg-slate-800/80 hover:bg-slate-700/80 transition duration-150 flex items-center justify-between group";
+        btn.innerHTML = `<span class="text-sm sm:text-base font-medium">${opt}</span><span class="text-xs text-slate-500 group-hover:text-slate-300">選択</span>`;
+        btn.onclick = () => selectOption(idx);
+        optionsContainerEl.appendChild(btn);
+      });
+    }
+
+    function selectOption(selectedIdx) {
+      const q = questions[currentQuestionIndex];
+      const isCorrect = selectedIdx === q.answer;
+
+      if (isCorrect) {
+        score++;
+      }
+      userAnswers.push({
+        id: q.id,
+        isCorrect: isCorrect,
+        selected: selectedIdx,
+        correct: q.answer
+      });
+
+      const buttons = optionsContainerEl.querySelectorAll("button");
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        btn.classList.remove("hover:bg-slate-700/80");
+        if (idx === q.answer) {
+          btn.className = "w-full text-left p-4 rounded-xl border border-emerald-500 bg-emerald-950/60 text-emerald-200 transition duration-150 flex items-center justify-between";
+          btn.innerHTML = `<span class="text-sm sm:text-base font-medium">${q.options[idx]}</span><span class="text-emerald-400 font-bold">✓ 正解</span>`;
+        } else if (idx === selectedIdx && !isCorrect) {
+          btn.className = "w-full text-left p-4 rounded-xl border border-rose-500 bg-rose-950/60 text-rose-200 transition duration-150 flex items-center justify-between";
+          btn.innerHTML = `<span class="text-sm sm:text-base font-medium">${q.options[idx]}</span><span class="text-rose-400 font-bold">✕ あなたの回答</span>`;
+        } else {
+          btn.className = "w-full text-left p-4 rounded-xl border border-slate-800 bg-slate-900/40 text-slate-500 opacity-60";
+        }
+      });
+
+      if (isCorrect) {
+        resultBadgeEl.className = "inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-sm font-bold mb-3 bg-emerald-900/80 text-emerald-300 border border-emerald-700/60";
+        resultBadgeEl.innerHTML = "<span>✓ 正解！その調子です</span>";
+      } else {
+        resultBadgeEl.className = "inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-sm font-bold mb-3 bg-rose-900/80 text-rose-300 border border-rose-700/60";
+        resultBadgeEl.innerHTML = "<span>✕ 不正解（要復習）</span>";
+      }
+
+      ruleTextEl.textContent = q.rule;
+      tipsTextEl.textContent = q.tips;
+      explanationContainerEl.classList.remove("hidden");
+
+      if (currentQuestionIndex === questions.length - 1) {
+        nextBtnEl.textContent = "結果を見る 🎉";
+      } else {
+        nextBtnEl.textContent = "次の問題へ →";
+      }
+      nextBtnEl.classList.remove("hidden");
+    }
+
+    nextBtnEl.onclick = () => {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        showResults();
+      }
+    };
+
+    function showResults() {
+      quizContainerEl.classList.add("hidden");
+      scoreContainerEl.classList.remove("hidden");
+      const percentage = Math.round((score / questions.length) * 100);
+      scoreSummaryEl.innerHTML = `正解数: <span class="font-bold text-white text-2xl">${score}</span> / ${questions.length} 問 (${percentage}%)`;
+    }
+
+    copyBtnEl.onclick = () => {
+      const wrongList = userAnswers.filter(a => !a.isCorrect).map(a => `問${a.id}`).join(", ");
+      const copyText = `【TOEIC Test 2 弱点12問特訓クイズ結果】\n正解数: ${score} / ${questions.length} (${Math.round((score / questions.length) * 100)}%)\n間違えた問題: ${wrongList || "なし（全問正解！🎉）"}`;
+      navigator.clipboard.writeText(copyText).then(() => {
+        copyBtnEl.innerHTML = "<span>✓ コピーしました！</span>";
+        setTimeout(() => {
+          copyBtnEl.innerHTML = "<span>📋 結果をコピー</span>";
+        }, 2000);
+      });
+    };
+
+    loadQuestion();
+  </script>
+</body>
+</html>
